@@ -14,7 +14,7 @@ struct point {
     var priznak: Int
     var number: Int
 }
-
+var lastMin = [0,1,2,3,4,5,6,7]
 var arrayPoint = [
     point(x:0,y:1,priznak:0,number:1),
     point(x:0,y:3,priznak:0,number:2),
@@ -64,7 +64,9 @@ var arrayPointEmpty = [
     point(x:4,y:6,priznak:9,number:0)
 ]
 
-//Получить элемент структуры
+var flag = false
+
+//Получить элемент из матрицы
 func getElement(xF:Int,yF:Int) -> point {
     var bufFunc = point(x: 99,y:99, priznak: 99, number: 99)
     for i in 0..<arrayPointEmpty.count {
@@ -75,7 +77,7 @@ func getElement(xF:Int,yF:Int) -> point {
     return bufFunc
 }
 
-
+//Присваим ячейке матрицы номер
 func setDataInArrayEmpty(x: Int, y: Int, number: Int) {
     var flag = false
     var k = 0
@@ -89,29 +91,45 @@ func setDataInArrayEmpty(x: Int, y: Int, number: Int) {
     }
 }
 
-//Прокладываем путь и присваимваем номера между двумя точка для признака 0
+//Функция возвращающая меньший номер из двух
+func lessNumberFunc (start:Int, end: Int) -> Int{
+    var less = 0
+    if (arrayPoint[start].number > arrayPoint[end].number){
+        less = arrayPoint[end].number
+    } else {
+        less = arrayPoint[start].number
+    }
+    return less
+}
+
+//Прокладываем путь и присваиваем номера между двумя точками для признака 0
 func makeWay0(start: Int, end: Int) {
     
     var k = 0
-    let menshiNumber = lessNumber(start: start, end: end)
+    let lessNumber = lessNumberFunc(start: start, end: end)
     
-    var bolshiyNumber = 0
-    if arrayPoint[start].number == menshiNumber {
-        bolshiyNumber = arrayPoint[end].number
-    } else {
-        bolshiyNumber = arrayPoint[start].number
+    var greaterNumber = arrayPoint[end].number
+    if greaterNumber == lessNumber {
+        greaterNumber = arrayPoint[start].number
+    }
+    
+    var yValue = start
+    var xValue = end
+    if arrayPoint[end].priznak == 0 {
+        yValue = end
+        xValue = start
     }
     
     if arrayPoint[start].x > arrayPoint[end].x {
         k = arrayPoint[end].x
         while (k <= arrayPoint[start].x) {
-            setDataInArrayEmpty(x: k, y: arrayPoint[start].y, number: menshiNumber)
+            setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y, number: lessNumber)
             k += 1
         }
     } else {
         k = arrayPoint[start].x
         while (k <= arrayPoint[end].x) {
-            setDataInArrayEmpty(x: k, y: arrayPoint[start].y, number: menshiNumber)
+            setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y, number: lessNumber)
             k += 1
         }
     }
@@ -119,44 +137,51 @@ func makeWay0(start: Int, end: Int) {
     if (arrayPoint[start].y > arrayPoint[end].y){
         k = arrayPoint[end].y
         while (k<=arrayPoint[start].y){
-            setDataInArrayEmpty(x: arrayPoint[end].x, y: k, number: menshiNumber)
+            setDataInArrayEmpty(x: arrayPoint[xValue].x, y: k, number: lessNumber)
             k += 1
         }
     } else {
         k = arrayPoint[start].y
         while (k<=arrayPoint[end].y){
-            setDataInArrayEmpty(x: arrayPoint[end].x, y: k, number: menshiNumber)
+            setDataInArrayEmpty(x: arrayPoint[xValue].x, y: k, number: lessNumber)
             k += 1
         }
     }
     
-    
-    arrayPoint[start].number = menshiNumber
-    arrayPoint[end].number = menshiNumber
-    repaintAll(lessNumber: menshiNumber, greaterNumber: bolshiyNumber)
+    arrayPoint[start].number = lessNumber
+    arrayPoint[end].number = lessNumber
+    repaintAll(lessNumber: lessNumber, greaterNumber: greaterNumber)
+    chaekEnd()
 }
 
 //Прокладываем путь и присваимваем номера между двумя точка для признака 1
 func makeWay1(start: Int, end: Int) {
+    
     var k = 0
-    let menshiNumber = lessNumber(start: start, end: end)
-    var bolshiyNumber = 0
-    if arrayPoint[start].number == menshiNumber {
-        bolshiyNumber = arrayPoint[end].number
-    } else {
-        bolshiyNumber = arrayPoint[start].number
+    let lessNumber = lessNumberFunc(start: start, end: end)
+    
+    var greaterNumber = arrayPoint[end].number
+    if greaterNumber == lessNumber {
+        greaterNumber = arrayPoint[start].number
+    }
+    
+    var xValue = start
+    var yValue = end
+    if arrayPoint[end].priznak == 1 {
+        xValue = end
+        yValue = start
     }
     
     if (arrayPoint[start].y > arrayPoint[end].y){
         k = arrayPoint[end].y
         while (k<=arrayPoint[start].y){
-            setDataInArrayEmpty(x: arrayPoint[start].x, y: k, number: menshiNumber)
+            setDataInArrayEmpty(x: arrayPoint[xValue].x, y: k, number: lessNumber)
             k += 1
         }
     } else {
         k = arrayPoint[start].y
         while (k<=arrayPoint[end].y){
-            setDataInArrayEmpty(x: arrayPoint[start].x, y: k, number: menshiNumber)
+            setDataInArrayEmpty(x: arrayPoint[xValue].x, y: k, number: lessNumber)
             k += 1
         }
     }
@@ -164,77 +189,123 @@ func makeWay1(start: Int, end: Int) {
     if arrayPoint[start].x > arrayPoint[end].x {
         k = arrayPoint[end].x
         while (k <= arrayPoint[start].x) {
-            setDataInArrayEmpty(x: k, y: arrayPoint[end].y, number: menshiNumber)
+            setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y, number: lessNumber)
             k += 1
         }
     } else {
         k = arrayPoint[start].x
         while (k <= arrayPoint[end].x) {
-            setDataInArrayEmpty(x: k, y: arrayPoint[end].y, number: menshiNumber)
+            setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y, number: lessNumber)
             k += 1
         }
     }
-    
-    arrayPoint[start].number = menshiNumber
-    arrayPoint[end].number = menshiNumber
-    repaintAll(lessNumber: menshiNumber, greaterNumber: bolshiyNumber)
+    arrayPoint[start].number = lessNumber
+    arrayPoint[end].number = lessNumber
+    repaintAll(lessNumber: lessNumber, greaterNumber: greaterNumber)
+    chaekEnd()
 }
 
+//Докрашиваем матрицу признаками и массив исходных выводов цепи
 func repaintAll(lessNumber: Int, greaterNumber: Int) {
     for i in (0..<arrayPointEmpty.count) {
         if arrayPointEmpty[i].number == greaterNumber{
             arrayPointEmpty[i].number = lessNumber
         }
     }
+    for i in (0..<arrayPoint.count){
+        if arrayPoint[i].number == greaterNumber{
+            arrayPoint[i].number = lessNumber
+        }
+    }
 }
 
-func lessNumber (start:Int, end: Int) -> Int{
-    var men = 0
-    if (arrayPoint[start].number > arrayPoint[end].number){
-        men = arrayPoint[end].number
+func FindSecondMinimum(loopNumber: Int, iLoop: Int) -> Int {
+    
+    var buf = 0
+    var minIndexLoop = 0
+    var min = 0
+    var min2 = 0
+    var k = 0
+    
+    //инициализируем минимум
+    if iLoop == arrayPoint.count-1 {
+        min = abs(arrayPoint[arrayPoint.count-1].x - arrayPoint[iLoop-1].x) + abs(arrayPoint[arrayPoint.count-1].y - arrayPoint[iLoop-1].y)
+        minIndexLoop = iLoop
     } else {
-        men = arrayPoint[start].number
+        min = abs(arrayPoint[arrayPoint.count-1].x - arrayPoint[iLoop].x) + abs(arrayPoint[arrayPoint.count-1].y - arrayPoint[iLoop].y)
+        minIndexLoop = iLoop
     }
-    return men
+    
+    
+    for j in 0..<arrayPoint.count {
+        if (j != iLoop) && (j != lastMin[iLoop]) {
+            buf = abs(arrayPoint[j].x - arrayPoint[iLoop].x) + abs(arrayPoint[j].y - arrayPoint[iLoop].y)
+            if (buf <= min)  {
+                min = buf
+                minIndexLoop = j
+                lastMin[iLoop] = minIndexLoop
+            }
+        }
+    }
+    return minIndexLoop
+}
+
+func chaekEnd(){
+    let el = arrayPoint[0].number
+    var cc = 1
+    for i in 1..<arrayPoint.count {
+        if arrayPoint[i].number == el {
+            cc += 1
+        }
+    }
+    if cc == arrayPoint.count {
+        flag = true
+    }
+}
+
+func prnt(){
+    for i in stride(from: 6, to: -1, by: -1)  {
+        for j in (0..<5) {
+            let q = getElement(xF: j, yF: i)
+            if j == 0 {
+                print ("\n")
+            }
+            print(q.number,terminator: " ")
+        }
+    }
+    print("\n")
 }
 
 var min = 0
 var buf = 0
+var k = 0
 var minIndex = 0
 var menshiNumber = 999
+var bolshiyNumber2 = 0
 
-var test: Int
-for i in 0..<arrayPoint.count {
+var i = 0
+while (flag == false) {
     
-    //инициализируем минимум
-    if i == arrayPoint.count-1 {
-        min = abs(arrayPoint[arrayPoint.count-1].x - arrayPoint[i-1].x) + abs(arrayPoint[arrayPoint.count-1].y - arrayPoint[i-1].y)
-        minIndex = i
-    } else {
-        min = abs(arrayPoint[arrayPoint.count-1].x - arrayPoint[i].x) + abs(arrayPoint[arrayPoint.count-1].y - arrayPoint[i].y)
-        minIndex = i
-    }
+    //for i in 0..<arrayPoint.count {
     
-    for j in 0..<arrayPoint.count {
-        if j != i {
-            buf = abs(arrayPoint[j].x - arrayPoint[i].x) + abs(arrayPoint[j].y - arrayPoint[i].y)
-            if (buf <= min)  {
-                //&& (arrayPoint[j].number != arrayPoint[i].number)
-                min = buf
-                minIndex = j
-            }
-        }
-    }
+    minIndex = FindSecondMinimum(loopNumber: k, iLoop:i)
+    print("-------Точки \(minIndex) и \(i)")
     
     if arrayPoint[minIndex].x == arrayPoint[i].x {
-        
         var bol = arrayPoint[i].y
         var men = arrayPoint[minIndex].y
         if (arrayPoint[minIndex].y > arrayPoint[i].y) {
             bol = arrayPoint[minIndex].y
             men = arrayPoint[i].y
         }
-        menshiNumber = lessNumber(start: minIndex, end: i)
+        menshiNumber = lessNumberFunc(start: minIndex, end: i)
+        
+        
+        if arrayPoint[minIndex].number == menshiNumber {
+            bolshiyNumber2 = arrayPoint[i].number
+        } else {
+            bolshiyNumber2 = arrayPoint[minIndex].number
+        }
         
         var k = men
         while (k <= bol) {
@@ -243,12 +314,22 @@ for i in 0..<arrayPoint.count {
         }
         arrayPoint[minIndex].number = menshiNumber
         arrayPoint[i].number = menshiNumber
+        repaintAll(lessNumber: menshiNumber, greaterNumber: bolshiyNumber2)
+        
+        chaekEnd()
+        prnt()
         
     } else {
         if arrayPoint[minIndex].y == arrayPoint[i].y {
             var bol = arrayPoint[i].x
             var men = arrayPoint[minIndex].x
-            menshiNumber = lessNumber(start: minIndex, end: i)
+            menshiNumber = lessNumberFunc(start: minIndex, end: i)
+            
+            if arrayPoint[minIndex].number == menshiNumber {
+                bolshiyNumber2 = arrayPoint[i].number
+            } else {
+                bolshiyNumber2 = arrayPoint[minIndex].number
+            }
             
             if (arrayPoint[minIndex].x > arrayPoint[i].x) {
                 bol = arrayPoint[minIndex].x
@@ -266,29 +347,30 @@ for i in 0..<arrayPoint.count {
                     setDataInArrayEmpty(x: arrayPoint[i].x, y: k, number: menshiNumber)
                     k += 1
                 }
+                
+                arrayPoint[minIndex].number = menshiNumber
+                arrayPoint[i].number = menshiNumber
+                repaintAll(lessNumber: menshiNumber, greaterNumber: bolshiyNumber2)
+                chaekEnd()
+                prnt()
             }
             
         } else {
             if (arrayPoint[i].priznak == 0) {
                 makeWay0(start: i, end: minIndex)
+                prnt()
             } else {
                 makeWay1(start: i, end: minIndex)
+                prnt()
             }
         }
     }
+    if (i == 7){i = 0
+        k = k+1
+    } else {i = i + 1}
+    // if k == 2 {flag = true}
 }
 
-
-for i in stride(from: 6, to: -1, by: -1)  {
-    for j in (0..<5) {
-        var q = getElement(xF: j, yF: i)
-        if j == 0 {
-            print ("\n")
-        }
-        print(q.number,terminator: " ")
-    }
-}
-print("\n")
 
 //for i in (0..<arrayPointEmpty.count) {
 //    if arrayPointEmpty[i].x == 0 {
