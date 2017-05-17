@@ -81,6 +81,21 @@ func getElement(xF:Int,yF:Int) -> point {
     return bufFunc
 }
 
+//Функция для перечения. Присваивает "*". Не перегибе не предусмотренно
+func chekPeregib(x:Int,y:Int) -> Bool{
+//    var flag = false
+//    for i in 0..<arrayPointEmpty.count {
+//        if (x == arrayPointEmpty[i].x) && (y==arrayPointEmpty[i].y) {
+//            if (arrayPointEmpty[i].character == "=" || arrayPointEmpty[i].character == "‖" || arrayPointEmpty[i].character == "*"){
+//                arrayPointEmpty[i].character = "*"
+//                flag = true
+//            }
+//        }
+//    }
+    return flag
+    
+}
+
 //Присваим ячейке матрицы номер
 func setDataInArrayEmpty(x: Int, y: Int, number: Int, picCharacter: String) {
     var flag = false
@@ -141,13 +156,17 @@ func makeWay0(start: Int, end: Int) {
     if arrayPoint[start].x > arrayPoint[end].x {
         k = arrayPoint[end].x*2
         while (k <= arrayPoint[start].x*2) {
+            if chekPeregib(x:k,y:arrayPoint[yValue].y*2) == false {
             setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y*2, number: lessNumber, picCharacter: "=")
+            }
             k += 1
         }
     } else {
         k = arrayPoint[start].x*2
         while (k <= arrayPoint[end].x*2) {
+            if chekPeregib(x:k,y:arrayPoint[yValue].y*2) == false {
             setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y*2, number: lessNumber, picCharacter: "=")
+            }
             k += 1
         }
     }
@@ -155,13 +174,17 @@ func makeWay0(start: Int, end: Int) {
     if (arrayPoint[start].y > arrayPoint[end].y){
         k = arrayPoint[end].y*2
         while (k<=arrayPoint[start].y*2){
+            if chekPeregib(x:arrayPoint[xValue].x*2,y:k) == false {
             setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "‖")
+            }
             k += 1
         }
     } else {
         k = arrayPoint[start].y*2
         while (k<=arrayPoint[end].y*2){
+            if chekPeregib(x:arrayPoint[xValue].x*2,y:k) == false {
             setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "‖")
+            }
             k += 1
         }
     }
@@ -193,13 +216,13 @@ func makeWay1(start: Int, end: Int) {
     if (arrayPoint[start].y > arrayPoint[end].y){
         k = arrayPoint[end].y*2
         while (k<=arrayPoint[start].y*2){
-            setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "Y")
+            setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "‖")
             k += 1
         }
     } else {
         k = arrayPoint[start].y*2
         while (k<=arrayPoint[end].y*2){
-            setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "Y")
+            setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "‖")
             k += 1
         }
     }
@@ -395,8 +418,13 @@ func chekNextLineX(x: Int, yStart: Int, yFinish:Int) -> Bool {
 
 func chekEndRead() -> Bool {
     var end = false
-    if arrayPoint.last?.number == arrayPoint.count {
-        end = true
+//    if arrayPoint.last?.number == arrayPoint.count {
+//        end = true
+//    }
+    for i in 0..<arrayPoint.count {
+        if arrayPoint[i].number == arrayPoint.count {
+            end = true
+        }
     }
     return end
 }
@@ -409,7 +437,8 @@ func initializationOfSigns(){
     var KOSTIL_X = 0
     var elem = 0
     var change = false
-    while (arrayPoint.last?.number != arrayPoint.count) {
+    //while (arrayPoint.last?.number != arrayPoint.count) {
+    while (chekEndRead() != true) {
         k += 1;
         
         if chekEndRead() != true {
@@ -524,7 +553,7 @@ paint()
 while (flag == false) {
     
     minIndex = FindSecondMinimum(loopNumber: k, iLoop:i)
-    print("-------Точки \(minIndex) и \(i)")
+    print("-------Точки \(minIndex+1) и \(i+1)-----------")
     
     if arrayPoint[minIndex].x == arrayPoint[i].x {
         var bol = arrayPoint[i].y
@@ -552,7 +581,7 @@ while (flag == false) {
         repaintAll(lessNumber: menshiNumber, greaterNumber: bolshiyNumber2)
         
         chaekEnd()
-        prnt()
+        //prnt()
         
     } else {
         if arrayPoint[minIndex].y == arrayPoint[i].y {
@@ -587,16 +616,16 @@ while (flag == false) {
                 arrayPoint[i].number = menshiNumber
                 repaintAll(lessNumber: menshiNumber, greaterNumber: bolshiyNumber2)
                 chaekEnd()
-                prnt()
+               // prnt()
             }
             
         } else {
             if (arrayPoint[i].priznak == 0) {
                 makeWay0(start: i, end: minIndex)
-                prnt()
+               // prnt()
             } else {
                 makeWay1(start: i, end: minIndex)
-                prnt()
+               // prnt()
             }
         }
     }
