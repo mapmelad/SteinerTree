@@ -155,13 +155,13 @@ func makeWay0(start: Int, end: Int) {
     if (arrayPoint[start].y > arrayPoint[end].y){
         k = arrayPoint[end].y*2
         while (k<=arrayPoint[start].y*2){
-            setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "Y")
+            setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "‖")
             k += 1
         }
     } else {
         k = arrayPoint[start].y*2
         while (k<=arrayPoint[end].y*2){
-            setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "Y")
+            setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "‖")
             k += 1
         }
     }
@@ -359,7 +359,7 @@ func writengFromFile() {
                     text2.append(q.character!)
                 }
                 //print ("")
-                text2.append("")
+                text2.append("\n")
             }
             //print("\n")
             text2.append("\n")
@@ -440,8 +440,10 @@ func initializationOfSigns(){
             if chekNextLineY(y: n-k, xStart: k, xFinish: m-k) == false {
                 KOSTIL_Y = 1
             }
-            for j in (k+KOSTIL_X...m-k) {
-                print("[",j,"] [",n-k-KOSTIL_Y,"] иниц признака по строке")
+            if (k+KOSTIL_X <= m-k - 1){
+            for j in (k+KOSTIL_X...m-k - 1) {
+                //если чо, вернуть на for j in (k+KOSTIL_X...m-k) {
+                print("[",j,"] [",n-k-KOSTIL_Y,"] иниц признака по строке верхней")
                 if getIndexInputData(xF: j, yF: n-k-KOSTIL_Y) != nil {
                     elem = getIndexInputData(xF: j, yF: n-k-KOSTIL_Y)!
                     arrayPoint[elem].number = initializationNumber
@@ -450,6 +452,7 @@ func initializationOfSigns(){
                     change = true
                 }
             }   /*Определение значений верхнего гор столбца*/
+            }
             print("\n")
             if change == true {
                 if lastSigns == 0 {
@@ -460,7 +463,8 @@ func initializationOfSigns(){
         }
         
         if chekEndRead() != true {
-            for j in stride(from: n-k-1-KOSTIL_Y, to: k-1-1, by: -1) {
+            for j in stride(from: n-k-KOSTIL_Y, to: k-1-1, by: -1) {
+                //если чо вернуть на for j in stride(from: n-k-1-KOSTIL_Y, to: k-1-1, by: -1) {
                 print("[",m-k,"] [",j,"] ")
                 if getIndexInputData(xF: m-k, yF: j) != nil {
                     elem = getIndexInputData(xF: m-k, yF: j)!
@@ -481,7 +485,7 @@ func initializationOfSigns(){
         
         if chekEndRead() != true {
             for j in stride(from: m-k-1, to: k-1+KOSTIL_X, by: -1) {
-                print("[",j,"] [",k-1,"] ")
+                print("[",j,"] [",k-1,"] иниц признака по строке нижней")
                 
                 if getIndexInputData(xF: j, yF: k-1) != nil {
                     elem = getIndexInputData(xF: j, yF: k-1)!
@@ -540,7 +544,7 @@ while (flag == false) {
         
         var k = men*2
         while (k <= bol*2) {
-            setDataInArrayEmpty(x: arrayPoint[i].x*2, y: k, number: menshiNumber, picCharacter: "Y")
+            setDataInArrayEmpty(x: arrayPoint[i].x*2, y: k, number: menshiNumber, picCharacter: "‖")
             k += 1
         }
         arrayPoint[minIndex].number = menshiNumber
