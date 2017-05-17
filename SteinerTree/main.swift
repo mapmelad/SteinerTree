@@ -81,21 +81,6 @@ func getElement(xF:Int,yF:Int) -> point {
     return bufFunc
 }
 
-//Функция для перечения. Присваивает "*". Не перегибе не предусмотренно
-func chekPeregib(x:Int,y:Int) -> Bool{
-//    var flag = false
-//    for i in 0..<arrayPointEmpty.count {
-//        if (x == arrayPointEmpty[i].x) && (y==arrayPointEmpty[i].y) {
-//            if (arrayPointEmpty[i].character == "=" || arrayPointEmpty[i].character == "‖" || arrayPointEmpty[i].character == "*"){
-//                arrayPointEmpty[i].character = "*"
-//                flag = true
-//            }
-//        }
-//    }
-    return flag
-    
-}
-
 //Присваим ячейке матрицы номер
 func setDataInArrayEmpty(x: Int, y: Int, number: Int, picCharacter: String) {
     var flag = false
@@ -156,17 +141,13 @@ func makeWay0(start: Int, end: Int) {
     if arrayPoint[start].x > arrayPoint[end].x {
         k = arrayPoint[end].x*2
         while (k <= arrayPoint[start].x*2) {
-            if chekPeregib(x:k,y:arrayPoint[yValue].y*2) == false {
             setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y*2, number: lessNumber, picCharacter: "=")
-            }
             k += 1
         }
     } else {
         k = arrayPoint[start].x*2
         while (k <= arrayPoint[end].x*2) {
-            if chekPeregib(x:k,y:arrayPoint[yValue].y*2) == false {
             setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y*2, number: lessNumber, picCharacter: "=")
-            }
             k += 1
         }
     }
@@ -174,17 +155,13 @@ func makeWay0(start: Int, end: Int) {
     if (arrayPoint[start].y > arrayPoint[end].y){
         k = arrayPoint[end].y*2
         while (k<=arrayPoint[start].y*2){
-            if chekPeregib(x:arrayPoint[xValue].x*2,y:k) == false {
             setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "‖")
-            }
             k += 1
         }
     } else {
         k = arrayPoint[start].y*2
         while (k<=arrayPoint[end].y*2){
-            if chekPeregib(x:arrayPoint[xValue].x*2,y:k) == false {
             setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "‖")
-            }
             k += 1
         }
     }
@@ -303,19 +280,6 @@ func chaekEnd(){
     }
 }
 
-func prnt(){
-    for i in stride(from: 6, to: -1, by: -1)  {
-        for j in (0..<5) {
-            let q = getElement(xF: j, yF: i)
-            if j == 0 {
-                print ("\n")
-            }
-            print(q.number,terminator: " ")
-        }
-    }
-    print("\n")
-}
-
 func paint(){
     var q:point
     for i in stride(from: (n-1)*2, to: -1, by: -1)  {
@@ -354,19 +318,6 @@ func readingFromFile() {
 
 func writengFromFile() {
     var text2 = ""
-    
-//    do {
-//        text2 = try String(contentsOf: URL(string:"file:///Users/semen/Desktop/SteinerTree/")!.appendingPathComponent("output.txt"), encoding: String.Encoding.utf8)
-//        let element = text2.components(separatedBy: "\n")
-//        for i in element {
-//            arrayPoint.append(point(x:Int(i.components(separatedBy: " ")[0])!,y:Int(i.components(separatedBy: " ")[1])!,priznak:99,number:99,character:"x"))
-//        }
-//    } catch {
-//        print("Egor")
-//    }
-    
-  //  if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-        
         let path = URL(string:"file:///Users/semen/Desktop/SteinerTree/output.txt")!
         
         //writing
@@ -378,22 +329,15 @@ func writengFromFile() {
                     q = getElement(xF: j, yF: i)
                     if j == 0 {
                     }
-                    //print(q.character!,terminator: "")
                     text2.append(q.character!)
                 }
-                //print ("")
                 text2.append("\n")
             }
-            //print("\n")
             text2.append("\n")
             
-            
-            
-            //try text2.write(to: path, atomically: false, encoding: String.Encoding.utf8)
             try text2.write(to: path, atomically: false, encoding: String.Encoding.utf8)
         }
-        catch {print("qqqqqq")}
-    //}
+        catch {print("Ошибка записи в файл")}
 }
 
 func chekNextLineY(y: Int, xStart: Int, xFinish:Int) -> Bool {
@@ -581,7 +525,6 @@ while (flag == false) {
         repaintAll(lessNumber: menshiNumber, greaterNumber: bolshiyNumber2)
         
         chaekEnd()
-        //prnt()
         
     } else {
         if arrayPoint[minIndex].y == arrayPoint[i].y {
@@ -616,16 +559,13 @@ while (flag == false) {
                 arrayPoint[i].number = menshiNumber
                 repaintAll(lessNumber: menshiNumber, greaterNumber: bolshiyNumber2)
                 chaekEnd()
-               // prnt()
             }
             
         } else {
             if (arrayPoint[i].priznak == 0) {
                 makeWay0(start: i, end: minIndex)
-               // prnt()
             } else {
                 makeWay1(start: i, end: minIndex)
-               // prnt()
             }
         }
     }
