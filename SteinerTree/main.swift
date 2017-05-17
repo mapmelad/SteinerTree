@@ -13,6 +13,7 @@ struct point {
     var y = 0
     var priznak = 0
     var number = 0
+    var character: String?
 }
 
 var lastMin = [0,1,2,3,4,5,6,7]
@@ -33,68 +34,30 @@ func initializeMatrixSize(){
         }
     }
 }
-//var arrayPoint = [
-//    point(x:0,y:1,priznak:0,number:1),
-//    point(x:0,y:3,priznak:0,number:2),
-//    point(x:1,y:6,priznak:1,number:3),
-//    point(x:4,y:5,priznak:0,number:4),
-//    point(x:3,y:0,priznak:1,number:5),
-//    point(x:2,y:2,priznak:0,number:6),
-//    point(x:2,y:4,priznak:0,number:7),
-//    point(x:3,y:3,priznak:1,number:8)
-//]
 
-//var arrayPoint = [
-//    point(x:0,y:1,priznak:0,number:1),
-//    point(x:1,y:6,priznak:1,number:2),
-//    point(x:4,y:6,priznak:1,number:3),
-//    point(x:2,y:0,priznak:0,number:4),
-//    point(x:1,y:3,priznak:1,number:5),
-//    point(x:2,y:5,priznak:0,number:6),
-//    point(x:3,y:1,priznak:1,number:7),
-//    point(x:2,y:3,priznak:0,number:8)
-//]
-
-//var arrayPointEmpty = [
-//    point(x:0,y:0,priznak:9,number:0),
-//    point(x:1,y:0,priznak:9,number:0),
-//    point(x:2,y:0,priznak:9,number:0),
-//    point(x:3,y:0,priznak:9,number:0),
-//    point(x:4,y:0,priznak:9,number:0),
-//    point(x:0,y:1,priznak:9,number:0),
-//    point(x:1,y:1,priznak:9,number:0),
-//    point(x:2,y:1,priznak:9,number:0),
-//    point(x:3,y:1,priznak:9,number:0),
-//    point(x:4,y:1,priznak:9,number:0),
-//    point(x:0,y:2,priznak:9,number:0),
-//    point(x:1,y:2,priznak:9,number:0),
-//    point(x:2,y:2,priznak:9,number:0),
-//    point(x:3,y:2,priznak:9,number:0),
-//    point(x:4,y:2,priznak:9,number:0),
-//    point(x:0,y:3,priznak:9,number:0),
-//    point(x:1,y:3,priznak:9,number:0),
-//    point(x:2,y:3,priznak:9,number:0),
-//    point(x:3,y:3,priznak:9,number:0),
-//    point(x:4,y:3,priznak:9,number:0),
-//    point(x:0,y:4,priznak:9,number:0),
-//    point(x:1,y:4,priznak:9,number:0),
-//    point(x:2,y:4,priznak:9,number:0),
-//    point(x:3,y:4,priznak:9,number:0),
-//    point(x:4,y:4,priznak:9,number:0),
-//    point(x:0,y:5,priznak:9,number:0),
-//    point(x:1,y:5,priznak:9,number:0),
-//    point(x:2,y:5,priznak:9,number:0),
-//    point(x:3,y:5,priznak:9,number:0),
-//    point(x:4,y:5,priznak:9,number:0),
-//    point(x:0,y:6,priznak:9,number:0),
-//    point(x:1,y:6,priznak:9,number:0),
-//    point(x:2,y:6,priznak:9,number:0),
-//    point(x:3,y:6,priznak:9,number:0),
-//    point(x:4,y:6,priznak:9,number:0)
-//]
+func initializationArrayPointEmpty() {
+    for i in (0...(n-1)*2){
+        for j in (0...(m-1)*2){
+            if (i%2==0){
+                if (j%2==0){
+                    arrayPointEmpty.append(point(x:j,y:i,priznak:9,number:0,character:"+"))
+                }
+                else {
+                   arrayPointEmpty.append(point(x:j,y:i,priznak:9,number:0,character:"—"))
+                }
+            } else {
+                if (j%2==0){
+                    arrayPointEmpty.append(point(x:j,y:i,priznak:9,number:0,character:"|"))
+                }
+                else {
+                    arrayPointEmpty.append(point(x:j,y:i,priznak:9,number:0,character:" "))
+                }
+            }
+        }
+    }
+}
 
 var flag = false
-
 //Получить элемент из матрицы
 func getIndexInputData(xF:Int,yF:Int) -> Int? {
     var index:Int?
@@ -109,7 +72,7 @@ func getIndexInputData(xF:Int,yF:Int) -> Int? {
 
 //Получить элемент из пустой матрицы
 func getElement(xF:Int,yF:Int) -> point {
-    var bufFunc = point(x: 99,y:99, priznak: 99, number: 99)
+    var bufFunc = point(x: 99,y:99, priznak: 99, number: 99, character:"x")
     for i in 0..<arrayPointEmpty.count {
         if (xF == arrayPointEmpty[i].x) && (yF==arrayPointEmpty[i].y) {
             bufFunc = arrayPointEmpty[i]
@@ -119,12 +82,26 @@ func getElement(xF:Int,yF:Int) -> point {
 }
 
 //Присваим ячейке матрицы номер
-func setDataInArrayEmpty(x: Int, y: Int, number: Int) {
+func setDataInArrayEmpty(x: Int, y: Int, number: Int, picCharacter: String) {
     var flag = false
     var k = 0
     while (k<=arrayPointEmpty.count) && (flag == false){
         if (x == arrayPointEmpty[k].x) && (y==arrayPointEmpty[k].y) {
             arrayPointEmpty[k].number = number
+            if x%2==0 {
+                if y%2==0 {
+                    if getIndexInputData(xF: x/2, yF: y/2) != nil {
+                        arrayPointEmpty[k].character = "*"
+                    } else {
+                        arrayPointEmpty[k].character = picCharacter
+                    } }else {
+                        arrayPointEmpty[k].character = picCharacter
+                    }
+                
+            } else {
+                arrayPointEmpty[k].character = picCharacter
+            }
+            
             flag = true
             print ("Покрасили [\(arrayPointEmpty[k].x)][\(arrayPointEmpty[k].y)] в \(arrayPointEmpty[k].number)")
         }
@@ -162,29 +139,29 @@ func makeWay0(start: Int, end: Int) {
     }
     
     if arrayPoint[start].x > arrayPoint[end].x {
-        k = arrayPoint[end].x
-        while (k <= arrayPoint[start].x) {
-            setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y, number: lessNumber)
+        k = arrayPoint[end].x*2
+        while (k <= arrayPoint[start].x*2) {
+            setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y*2, number: lessNumber, picCharacter: "=")
             k += 1
         }
     } else {
-        k = arrayPoint[start].x
-        while (k <= arrayPoint[end].x) {
-            setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y, number: lessNumber)
+        k = arrayPoint[start].x*2
+        while (k <= arrayPoint[end].x*2) {
+            setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y*2, number: lessNumber, picCharacter: "=")
             k += 1
         }
     }
     
     if (arrayPoint[start].y > arrayPoint[end].y){
-        k = arrayPoint[end].y
-        while (k<=arrayPoint[start].y){
-            setDataInArrayEmpty(x: arrayPoint[xValue].x, y: k, number: lessNumber)
+        k = arrayPoint[end].y*2
+        while (k<=arrayPoint[start].y*2){
+            setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "Y")
             k += 1
         }
     } else {
-        k = arrayPoint[start].y
-        while (k<=arrayPoint[end].y){
-            setDataInArrayEmpty(x: arrayPoint[xValue].x, y: k, number: lessNumber)
+        k = arrayPoint[start].y*2
+        while (k<=arrayPoint[end].y*2){
+            setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "Y")
             k += 1
         }
     }
@@ -214,29 +191,29 @@ func makeWay1(start: Int, end: Int) {
     }
     
     if (arrayPoint[start].y > arrayPoint[end].y){
-        k = arrayPoint[end].y
-        while (k<=arrayPoint[start].y){
-            setDataInArrayEmpty(x: arrayPoint[xValue].x, y: k, number: lessNumber)
+        k = arrayPoint[end].y*2
+        while (k<=arrayPoint[start].y*2){
+            setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "Y")
             k += 1
         }
     } else {
-        k = arrayPoint[start].y
-        while (k<=arrayPoint[end].y){
-            setDataInArrayEmpty(x: arrayPoint[xValue].x, y: k, number: lessNumber)
+        k = arrayPoint[start].y*2
+        while (k<=arrayPoint[end].y*2){
+            setDataInArrayEmpty(x: arrayPoint[xValue].x*2, y: k, number: lessNumber, picCharacter: "Y")
             k += 1
         }
     }
     
     if arrayPoint[start].x > arrayPoint[end].x {
-        k = arrayPoint[end].x
-        while (k <= arrayPoint[start].x) {
-            setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y, number: lessNumber)
+        k = arrayPoint[end].x*2
+        while (k <= arrayPoint[start].x*2) {
+            setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y*2, number: lessNumber, picCharacter: "=")
             k += 1
         }
     } else {
-        k = arrayPoint[start].x
-        while (k <= arrayPoint[end].x) {
-            setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y, number: lessNumber)
+        k = arrayPoint[start].x*2
+        while (k <= arrayPoint[end].x*2) {
+            setDataInArrayEmpty(x: k, y: arrayPoint[yValue].y*2, number: lessNumber, picCharacter: "=")
             k += 1
         }
     }
@@ -316,25 +293,26 @@ func prnt(){
     print("\n")
 }
 
-//func paint(){
-//    for i in stride(from: (n-1)*2, to: -1, by: -1)  {
-//        for j in (0..<(m-1)*2+1) {
-//            let q = getElement(xF: j, yF: i)
-//            if j == 0 {
-//                print ("\n")
-//            }
-//            if j == 0 {
-//
-//            }
-//            print(q.number,terminator: " ")
-//        }
-//    }
-//    print("\n")
-//}
+func paint(){
+    var q:point
+    for i in stride(from: (n-1)*2, to: -1, by: -1)  {
+        
+        for j in (0...(m-1)*2) {
+            q = getElement(xF: j, yF: i)
+            if j == 0 {
+            }
+            print(q.character!,terminator: "")
+        }
+        print ("")
+    }
+    print("\n")
+}
+
+
 
 func filePath() -> URL {
     let documentsDirectory = URL(string:"file:///Users/semen/Desktop/SteinerTree/")!
-    let filename = documentsDirectory.appendingPathComponent("input.txt")
+    let filename = documentsDirectory.appendingPathComponent("input2.txt")
     return filename
 }
 
@@ -344,11 +322,55 @@ func readingFromFile() {
         text2 = try String(contentsOf: filePath(), encoding: String.Encoding.utf8)
         let element = text2.components(separatedBy: "\n")
         for i in element {
-            arrayPoint.append(point(x:Int(i.components(separatedBy: " ")[0])!,y:Int(i.components(separatedBy: " ")[1])!,priznak:99,number:99))
+            arrayPoint.append(point(x:Int(i.components(separatedBy: " ")[0])!,y:Int(i.components(separatedBy: " ")[1])!,priznak:99,number:99,character:"x"))
         }
     } catch {
         print("Egor")
     }
+}
+
+func writengFromFile() {
+    var text2 = ""
+    
+//    do {
+//        text2 = try String(contentsOf: URL(string:"file:///Users/semen/Desktop/SteinerTree/")!.appendingPathComponent("output.txt"), encoding: String.Encoding.utf8)
+//        let element = text2.components(separatedBy: "\n")
+//        for i in element {
+//            arrayPoint.append(point(x:Int(i.components(separatedBy: " ")[0])!,y:Int(i.components(separatedBy: " ")[1])!,priznak:99,number:99,character:"x"))
+//        }
+//    } catch {
+//        print("Egor")
+//    }
+    
+  //  if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+        
+        let path = URL(string:"file:///Users/semen/Desktop/SteinerTree/output.txt")!
+        
+        //writing
+        do {
+            var q:point
+            for i in stride(from: (n-1)*2, to: -1, by: -1)  {
+                
+                for j in (0...(m-1)*2) {
+                    q = getElement(xF: j, yF: i)
+                    if j == 0 {
+                    }
+                    //print(q.character!,terminator: "")
+                    text2.append(q.character!)
+                }
+                //print ("")
+                text2.append("")
+            }
+            //print("\n")
+            text2.append("\n")
+            
+            
+            
+            //try text2.write(to: path, atomically: false, encoding: String.Encoding.utf8)
+            try text2.write(to: path, atomically: false, encoding: String.Encoding.utf8)
+        }
+        catch {print("qqqqqq")}
+    //}
 }
 
 func chekNextLineY(y: Int, xStart: Int, xFinish:Int) -> Bool {
@@ -419,7 +441,7 @@ func initializationOfSigns(){
                 KOSTIL_Y = 1
             }
             for j in (k+KOSTIL_X...m-k) {
-                print("[",j,"] [",n-k-KOSTIL_Y,"] ")
+                print("[",j,"] [",n-k-KOSTIL_Y,"] иниц признака по строке")
                 if getIndexInputData(xF: j, yF: n-k-KOSTIL_Y) != nil {
                     elem = getIndexInputData(xF: j, yF: n-k-KOSTIL_Y)!
                     arrayPoint[elem].number = initializationNumber
@@ -492,7 +514,8 @@ var i = 0
 readingFromFile()
 initializeMatrixSize()
 initializationOfSigns()
-
+initializationArrayPointEmpty()
+paint()
 
 while (flag == false) {
     
@@ -515,9 +538,9 @@ while (flag == false) {
             bolshiyNumber2 = arrayPoint[minIndex].number
         }
         
-        var k = men
-        while (k <= bol) {
-            setDataInArrayEmpty(x: arrayPoint[i].x, y: k, number: menshiNumber)
+        var k = men*2
+        while (k <= bol*2) {
+            setDataInArrayEmpty(x: arrayPoint[i].x*2, y: k, number: menshiNumber, picCharacter: "Y")
             k += 1
         }
         arrayPoint[minIndex].number = menshiNumber
@@ -550,9 +573,9 @@ while (flag == false) {
                     menIndex = i
                 }
                 
-                var k = men
-                while (k <= bol) {
-                    setDataInArrayEmpty(x: k, y: arrayPoint[i].y, number: menshiNumber)
+                var k = men*2
+                while (k <= bol*2) {
+                    setDataInArrayEmpty(x: k, y: arrayPoint[i].y*2, number: menshiNumber, picCharacter: "=")
                     k += 1
                 }
                 
@@ -576,9 +599,6 @@ while (flag == false) {
     if (i == arrayPoint.count-1){i = 0
         k = k+1
     } else {i = i + 1}
+    paint()
+    writengFromFile()
 }
-
-print("+-+-+")
-print("| | |")
-print("+-+-+")
-
