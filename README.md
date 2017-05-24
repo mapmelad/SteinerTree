@@ -2,7 +2,8 @@
 Вариант 43. Построение деревьев соединений печатного монтажа (деревьев Штейнера).
 
 Алгоритм:
-![alt text](https://pp.userapi.com/c639126/v639126400/1ccd1/nZz7xc7s1Fg.jpg)
+![alt text](https://pp.userapi.com/c837420/v837420846/3e56a/v5YAZkshbTc.jpg)
+
 
 Пример: 
 ![alt text](https://pp.userapi.com/c639126/v639126400/1ccdb/yzgclX46BVQ.jpg)
